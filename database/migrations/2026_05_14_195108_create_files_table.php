@@ -15,8 +15,7 @@ return new class extends Migration
     public function up(): void {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('model_type', 80)->comment('Tipo de modelo');
-            $table->unsignedBigInteger('model_id')->comment('Modelo');
+            $table->morphs('fileable');
             $table->string('disk', 30)->comment('Disco donde se almacenó el archivo');
             $table->string('name', 20)->comment('Nombre del archivo almacenado');
             $table->timestamps();
