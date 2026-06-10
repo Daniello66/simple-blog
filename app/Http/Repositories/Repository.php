@@ -64,7 +64,7 @@ abstract class Repository
     }
 
     /**
-     * Eliminar registro,
+     * Eliminar registro.
      *
      * @param int $id ID del registro.
      * @return void
