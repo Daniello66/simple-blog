@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,5 +28,35 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed'
         ];
+    }
+
+    /**
+     * Relación de uno a muchos con posts.
+     *
+     * @return HasMany
+     * @author Daniel Beltrán
+     */
+    public function posts(): HasMany {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Relación de uno a muchos con comments.
+     *
+     * @return HasMany
+     * @author Daniel Beltrán
+     */
+    public function comments(): HasMany {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Relación de uno a muchos con reactions.
+     *
+     * @return HasMany
+     * @author Daniel Beltrán
+     */
+    public function reactions(): HasMany {
+        return $this->hasMany(Reaction::class);
     }
 }
