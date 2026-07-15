@@ -10,6 +10,7 @@ class PostRepository extends Repository
     /**
      * Constructor.
      *
+     * @param Post $model Modelo de posts.
      * @return void
      * @author Daniel Beltrán
      */

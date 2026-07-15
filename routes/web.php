@@ -10,4 +10,7 @@ Route::group([
     'namespace' => 'App\Http\Controllers'
 ], function ($route) {
     $route->get('/', 'PostController@index');
+    $route->resource('posts', 'PostController');
+
+    $route->get('categories', 'CategoryController@index');
 });
