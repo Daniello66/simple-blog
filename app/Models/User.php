@@ -3,8 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -22,12 +25,25 @@ class User extends Authenticatable
      * Castear atributos.
      *
      * @return array
+     * @author Daniel Beltrán
      */
     protected function casts(): array {
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed'
         ];
+    }
+
+    /**
+     * Gestionar el atributo password.
+     *
+     * @return Attribute
+     * @author Daniel Beltrán
+     */
+    public function password(): Attribute {
+        return Attribute::make(
+            set: fn (string $value) => Hash::make($value)
+        );
     }
 
     /**
