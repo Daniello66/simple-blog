@@ -35,6 +35,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Agregar datos predefinidos a las consultas.
+     *
+     * @return array
+     * @author Daniel Beltrán
+     */
+    protected function appends(): array {
+        return [
+            'fullname'
+        ];
+    }
+
+    /**
      * Gestionar el atributo password.
      *
      * @return Attribute
@@ -43,6 +55,18 @@ class User extends Authenticatable
     public function password(): Attribute {
         return Attribute::make(
             set: fn (string $value) => Hash::make($value)
+        );
+    }
+
+    /**
+     * Gestionar el atributo fullname.
+     *
+     * @return Attribute
+     * @author Daniel Beltrán
+     */
+    public function fullname(): Attribute {
+        return Attribute::make(
+            get: fn () => $this->name . ' ' . $this->surname
         );
     }
 
