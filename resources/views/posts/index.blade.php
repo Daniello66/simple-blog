@@ -17,6 +17,14 @@
         @endforeach
     </div>
 
+    <div class="mb-4">
+        <a href="{{ route('posts.create') }}" role="button" class="btn btn-primary">Crear</a>
+    </div>
+
+    @if (session()->has('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @endif
+
     @if (count($posts) > 0)
         @foreach ($posts as $post)
             <div class="border border-secondary rounded-2 p-3 mb-3">

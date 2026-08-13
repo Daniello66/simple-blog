@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\CustomException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\CreatePostRequest;
 use App\Http\Repositories\PostRepository;
 use App\Http\Repositories\CategoryRepository;
 
@@ -59,6 +65,38 @@ class PostController extends Controller
         return view('posts.create')->with([
             'categories' => $this->category_repository->getAll(new Request())
         ]);
+    }
+
+    /**
+     * Crear un post.
+     *
+     * @param CreatePostRequest $request Contenido de la petición.
+     * @return RedirectResponse
+     * @author Daniel Beltrán
+     */
+    public function store(CreatePostRequest $request): RedirectResponse {
+        try {
+            if (is_null(Auth::id())) {
+                throw new CustomException('Debes iniciar sesión para publicar');
+            }
+
+            DB::beginTransaction();
+            $request->merge(['user_id' => Auth::id()]);
+            $this->repository->save($request->all());
+            DB::commit();
+
+            return to_route('posts.index')->with(['message' => 'El post fue creado con éxito']);
+        } catch (Exception $error) {
+            DB::rollback();
+
+            if ($error instanceof CustomException) {
+                $message = $error->getMessage();
+            } else {
+                $message = 'Ocurrió un error al crear el registro';
+            }
+
+            return to_route('posts.create')->with(['error' => $message]);
+        }
     }
 }
 

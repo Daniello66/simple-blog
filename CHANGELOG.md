@@ -5,3 +5,5 @@ Registro de cambios del proyecto.
 ### Added
 - Sistema de registro y autenticación de usuarios.
 - Página principal de posts.
+- Página de detalle de posts.
+- Página para crear posts.
