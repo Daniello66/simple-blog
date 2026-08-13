@@ -37,6 +37,19 @@ class PostController extends Controller
     }
 
     /**
+     * Cargar la página de detalle del post.
+     *
+     * @param int $id ID del post.
+     * @return View
+     * @author Daniel Beltrán
+     */
+    public function show(int $id): View {
+        return view('posts.show')->with([
+            'post' => $this->repository->getOne($id)
+        ]);
+    }
+
+    /**
      * Cargar la página de creación.
      *
      * @return View
