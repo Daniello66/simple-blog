@@ -34,6 +34,7 @@ class PostRepository extends Repository
             'user:id,name,surname',
             'category:id,name'
         ])
+        ->when($request->filled('category_id'), fn($query) => $query->where('category_id', $request->category_id))
         ->orderBy('created_at', 'desc')
         ->get();
     }

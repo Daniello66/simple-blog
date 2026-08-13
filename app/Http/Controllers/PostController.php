@@ -31,7 +31,8 @@ class PostController extends Controller
      */
     public function index(Request $request): View {
         return view('posts.index')->with([
-            'posts' => $this->repository->getAll($request)
+            'posts'      => $this->repository->getAll($request),
+            'categories' => $this->category_repository->getAll(new Request())
         ]);
     }
 
