@@ -7,3 +7,4 @@ Registro de cambios del proyecto.
 - Página principal de posts.
 - Página de detalle de posts.
 - Página para crear posts.
+- Página para editar posts.

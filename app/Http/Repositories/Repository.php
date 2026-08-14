@@ -60,7 +60,8 @@ abstract class Repository
     public function update(int $id, array $data): Model {
         $record = $this->model->find($id);
         $record->fill($data);
-        return $record->save();
+        $record->save();
+        return $record->refresh();
     }
 
     /**

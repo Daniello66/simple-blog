@@ -75,27 +75,75 @@ class PostController extends Controller
      * @author Daniel Beltrán
      */
     public function store(CreatePostRequest $request): RedirectResponse {
+        return $this->savePost($request, 'posts.index', 'posts.create');
+    }
+
+    /**
+     * Cargar la página de edición.
+     *
+     * @param int $id ID del post.
+     * @return View
+     * @author Daniel Beltrán
+     */
+    public function edit(int $id): View {
+        return $this->create()->with([
+            'post' => $this->repository->getOne($id)
+        ]);
+    }
+
+    /**
+     * Editar un post.
+     *
+     * @param int $id ID del post.
+     * @param CreatePostRequest $request Contenido de la petición.
+     * @return RedirectResponse
+     * @author Daniel Beltrán
+     */
+    public function update(int $id, CreatePostRequest $request): RedirectResponse {
+        // TODO: agregar seguridad para no permitir modificar un post que es de otro autor
+
+        $request->merge(['id' => $id]);
+        return $this->savePost($request, 'posts.index', 'posts.create');
+    }
+
+    /**
+     * Guardar un post.
+     *
+     * @param Request $request Contenido de la petición.
+     * @param string $redirect_success Nombre de la ruta a redirigir en caso de éxito.
+     * @param string $redirect_error Nombre de la ruta a redirigir en caso de error.
+     * @throws CustomException Cuando no hay una sesión activa.
+     * @return RedirectResponse
+     * @author Daniel Beltrán
+     */
+    public function savePost(Request $request, string $redirect_success, string $redirect_error): RedirectResponse {
         try {
             if (is_null(Auth::id())) {
-                throw new CustomException('Debes iniciar sesión para publicar');
+                throw new CustomException('Debes iniciar sesión para realizar esta acción');
             }
 
             DB::beginTransaction();
-            $request->merge(['user_id' => Auth::id()]);
-            $this->repository->save($request->all());
+
+            if ($request->filled('id')) {
+                $this->repository->update($request->id, $request->except(['id']));
+            } else {
+                $request->merge(['user_id' => Auth::id()]);
+                $this->repository->save($request->all());
+            }
+
             DB::commit();
 
-            return to_route('posts.index')->with(['message' => 'El post fue creado con éxito']);
+            return to_route($redirect_success)->with(['message' => 'El post fue guardado con éxito']);
         } catch (Exception $error) {
             DB::rollback();
 
             if ($error instanceof CustomException) {
                 $message = $error->getMessage();
             } else {
-                $message = 'Ocurrió un error al crear el registro';
+                $message = 'Ocurrió un error al guardar el registro';
             }
 
-            return to_route('posts.create')->with(['error' => $message]);
+            return to_route($redirect_error)->with(['error' => $message]);
         }
     }
 }
