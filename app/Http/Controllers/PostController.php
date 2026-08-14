@@ -14,6 +14,7 @@ use App\Http\Repositories\PostRepository;
 use App\Http\Repositories\CategoryRepository;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('auth', only: ['create', 'edit'])]
 #[Middleware('post.edit', only: ['edit'])]
 class PostController extends Controller
 {
@@ -118,10 +119,6 @@ class PostController extends Controller
      */
     public function savePost(Request $request, string $redirect_success, string $redirect_error): RedirectResponse {
         try {
-            if (is_null(Auth::id())) {
-                throw new CustomException('Debes iniciar sesión para realizar esta acción');
-            }
-
             DB::beginTransaction();
 
             if ($request->filled('id')) {
