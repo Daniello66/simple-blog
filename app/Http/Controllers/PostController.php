@@ -12,7 +12,9 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Repositories\PostRepository;
 use App\Http\Repositories\CategoryRepository;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('post.edit', only: ['edit'])]
 class PostController extends Controller
 {
     /**
@@ -100,8 +102,6 @@ class PostController extends Controller
      * @author Daniel Beltrán
      */
     public function update(int $id, CreatePostRequest $request): RedirectResponse {
-        // TODO: agregar seguridad para no permitir modificar un post que es de otro autor
-
         $request->merge(['id' => $id]);
         return $this->savePost($request, 'posts.index', 'posts.create');
     }
