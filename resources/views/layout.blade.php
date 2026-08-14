@@ -17,7 +17,11 @@
         @if (Route::has('login'))
             <nav class="text-end">
                 @auth
-                    <form method="POST" action="{{ route('logout') }}">
+                    <div class="d-inline-block me-4">
+                        <strong>{{ Auth::user()->fullname }}</strong>
+                    </div>
+
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
                         @csrf
 
                         <button

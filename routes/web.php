@@ -7,9 +7,9 @@ use App\Http\Controllers\ProfileController;
     return view('welcome'); // TODO: Remover ruta cuando se complete la página de posts
 }); */
 
-Route::get('/dashboard', function () {
+/* Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard'); */
 
 // Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {
