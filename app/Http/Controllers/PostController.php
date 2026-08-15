@@ -78,7 +78,7 @@ class PostController extends Controller
      * @author Daniel Beltrán
      */
     public function store(CreatePostRequest $request): RedirectResponse {
-        return $this->savePost($request, 'posts.index', 'posts.create');
+        return $this->savePost($request, ['route' => 'posts.index'], ['route' => 'posts.create']);
     }
 
     /**
@@ -104,20 +104,20 @@ class PostController extends Controller
      */
     public function update(int $id, CreatePostRequest $request): RedirectResponse {
         $request->merge(['id' => $id]);
-        return $this->savePost($request, 'posts.index', 'posts.create');
+        return $this->savePost($request, ['route' => 'posts.index'], ['route' => 'posts.edit', 'params' => $id]);
     }
 
     /**
      * Guardar un post.
      *
      * @param Request $request Contenido de la petición.
-     * @param string $redirect_success Nombre de la ruta a redirigir en caso de éxito.
-     * @param string $redirect_error Nombre de la ruta a redirigir en caso de error.
+     * @param array $redirect_success Datos de redirección en caso de éxito.
+     * @param array $redirect_error Datos de redirección en caso de error.
      * @throws CustomException Cuando no hay una sesión activa.
      * @return RedirectResponse
      * @author Daniel Beltrán
      */
-    public function savePost(Request $request, string $redirect_success, string $redirect_error): RedirectResponse {
+    public function savePost(Request $request, array $redirect_success, array $redirect_error): RedirectResponse {
         try {
             DB::beginTransaction();
 
@@ -130,7 +130,7 @@ class PostController extends Controller
 
             DB::commit();
 
-            return to_route($redirect_success)->with(['message' => 'El post fue guardado con éxito']);
+            return to_route($redirect_success['route'], $redirect_success['params'] ?? [])->with(['message' => 'El post fue guardado con éxito']);
         } catch (Exception $error) {
             DB::rollback();
 
@@ -140,7 +140,7 @@ class PostController extends Controller
                 $message = 'Ocurrió un error al guardar el registro';
             }
 
-            return to_route($redirect_error)->with(['error' => $message]);
+            return to_route($redirect_error['route'], $redirect_error['params'] ?? [])->with(['error' => $message]);
         }
     }
 }
